@@ -1,191 +1,196 @@
-const manager = require("./lib/manager");
-const engineer = require("./lib/engineer");
-const intern = require("./lib/intern");
+const Manager = require("./lib/manager");
+const Engineer = require("./lib/engineer");
+const Intern = require("./lib/intern");
 const inquirer = require("inquirer");
 const path = require("path");
-const fs =require("fs");
+const fs = require("fs");
 const output = path.resolve(__dirname, "output", "team.html");
-const render = require("./lib/htmlRender");
+const render = require("./lib/htmlRenderer");
 
 let emp = [];
 let empID = [];
 
-function validateID(input) {
-    if (isNaN(input)){
-        return "Please enter a four digit Employee ID number.";
+
+function validateId(input) {
+  if (isNaN(input)) {
+    return "Please enter a four digit employee ID number!";
+  }
+  for (i = 0; i < empID.length; i++) {
+    if (input === empID[i]) {
+      return "That ID number is already in use!"
     }
-    for (i = 0; i < empID.length; i++) {
-        if (input === empID[i]) {
-            return "ID number is in use."
-        }
-    }
-    return true;
+  }
+  return true;
 }
 
 
+
+
+console.log("Build your team.");
+
 const templateStart = () => {
-    inquirer.prompt([
-      //takes in name 
-      {
-        type: "input",
-        message: "What is the manager's name?",
-        name: "name"
-      },
+  inquirer.prompt([
 
-      {
-        type: "number",
-        message: "What is the manager's ID number?",
-        name: "id",
+    {
+      type: "input",
+      message: "What is the manager's name?",
+      name: "Name"
+    },
+ 
+    {
+      type: "number",
+      message: "What is the manager's ID number?",
+      name: "ID",
 
-        validate: validateId
-      },
+      validate: validateId
+    },
 
-      {
-        type: "input",
-        message: "What is the manager's email address?",
-        name: "email"
-      },
+    {
+      type: "input",
+      message: "What is the manager's email address?",
+      name: "Email"
+    },
 
-      {
-        type: "number",
-        message: "What is the manager's office phone number?",
-        name: "officeNumber"
-      },
-      {
-        type: "list",
-        message: "Which type of team member would you like to add now?",
-        choices: ["Engineer", "Intern", "I don't want to add any more team members, thanks!"],
-        name: "action"
-      }
-    ]).then((prompt) => {
-  
-      const newManager = new Manager(prompt.name, prompt.id, prompt.email, prompt.officeNumber);
-  
-      emp.push(newManager);
-      empId.push(prompt.id);
-  
-      switch (prompt.action) {
-        case "Engineer":
-          engineerStart();
-          break;
-        case "Intern":
-          internStart();
-          break;
-        default:
-          // render();
-          fs.writeFile(output, render(emp), function (err) {
-            if (err) {
-              throw err;
-            }
-          });
-          console.log("the html has been rendered! Head over to the Output folder!");
-          break;
-      }
-    });
-  };
+    {
+      type: "number",
+      message: "What is the Mgr's office phone number?",
+      name: "officeNumber"
+    },
+    {
+      type: "list",
+      message: "Please add the next teammember...",
+      choices: ["Engineer", "Intern", "None at the moment"],
+      name: "Options"
+    }
+  ]).then((prompt) => {
 
-  const secondPrompt = () => {
-    inquirer.prompt([
+    const newMgr = new Manager(prompt.Name, prompt.ID, prompt.Email, prompt.officeNumber);
 
-      {
-        type: "list",
-        message: "Which type of team member would you like to add now?",
-        choices: ["Engineer", "Intern", "I don't want to add any more team members, thanks!"],
-        name: "action"
-      }
-    ]).then((prompt) => {
-      switch (prompt.action) {
-        case "Engineer":
-          engineerStart();
-          break;
-        case "Intern":
-          internStart();
-          break;
-        default:
-          // render();
-          fs.writeFile(outputPath, render(emp), function (err) {
-            if (err) {
-              throw err;
-            }
-          });
-          console.log("the html has been rendered! Head over to the Output folder!");
-          break;
-      }
-    });
-  };
-  
+    emp.push(newMgr);
+    empID.push(prompt.ID);
+
+    switch (prompt.Options) {
+      case "Engineer":
+        engineerStart();
+        break;
+      case "Intern":
+        internStart();
+        break;
+      default:
+        // render();
+        fs.writeFile(output, render(emp), function (err) {
+          if (err) {
+            throw err;
+          }
+        });
+        console.log("The rendered HTML file is located in the output folder.");
+        break;
+    }
+  });
+};
 
 
 const engineerStart = () => {
-    inquirer.prompt([
-      {
-        type: "input",
-        message: "What is the engineer's name?",
-        name: "name"
-      },
-      {
-        type: "number",
-        message: "What is the engineer's ID number?",
-        name: "id",
-        validate: validateId
-      },
-      {
-        type: "input",
-        message: "What is the engineer's email address?",
-        name: "email"
-      },
-      {
-        type: "input",
-        message: "What is the engineer's GitHub user name?",
-        name: "github"
-      }
-    ]).then((prompt) => {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "What is the engineer's name?",
+      name: "Name"
+    },
+    {
+      type: "number",
+      message: "What is the engineer's ID number?",
+      name: "ID",
+      validate: validateId
+    },
+    {
+      type: "input",
+      message: "What is the engineer's email address?",
+      name: "Email"
+    },
+    {
+      type: "input",
+      message: "What is the engineer's GitHub user name?",
+      name: "GitHub"
+    }
+  ]).then((prompt) => {
+    //create new engineer
+    const newEngineer = new Engineer(prompt.Name, prompt.ID, prompt.Email, prompt.GitHub);
 
-      const newEngineer = new Engineer(prompt.name, prompt.id, prompt.email, prompt.github);
-  
-  
-      emp.push(newEngineer);
-      empID.push(prompt.id);
-  
-    
-      secondPrompt();
-    });
-  };
-  
-  
+    //push it to an array of emp
+    emp.push(newEngineer);
+    empID.push(prompt.id);
 
-  const internStart = () => {
-    inquirer.prompt([
-      {
-        type: "input",
-        message: "What is the intern's name?",
-        name: "name"
-      },
-      {
-        type: "number",
-        message: "What is the interns's ID number?",
-        name: "id",
-        validate: validateId
-      },
-      {
-        type: "input",
-        message: "What is the interns's email address?",
-        name: "email"
-      },
-      {
-        type: "input",
-        message: "Where is the intern attending school?",
-        name: "school"
-      }
-    ]).then((prompt) => {
-      const newIntern = new Intern(prompt.name, prompt.id, prompt.email, prompt.school);
-  
-      emp.push(newIntern);
-      empID.push(prompt.id);
-  
-      secondPrompt();
-    });
-  };
-  
-  
-  templateStart();
+    //start over again with secondPrompt()
+    secondPrompt();
+  });
+};
+
+
+
+const internStart = () => {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "What is the intern's name?",
+      name: "Name"
+    },
+    {
+      type: "number",
+      message: "What is the interns's ID number?",
+      name: "ID",
+      validate: validateId
+    },
+    {
+      type: "input",
+      message: "What is the interns's email address?",
+      name: "Email"
+    },
+    {
+      type: "input",
+      message: "Where is the intern attending school?",
+      name: "School"
+    }
+  ]).then((prompt) => {
+    const newIntern = new Intern(prompt.Name, prompt.ID, prompt.Email, prompt.School);
+
+    emp.push(newIntern);
+    empID.push(prompt.id);
+
+    secondPrompt();
+  });
+};
+
+
+const secondPrompt = () => {
+  inquirer.prompt([
+
+    {
+      type: "list",
+      message: "Please add the next teammember...",
+      choices: ["Engineer", "Intern", "None at the moment"],
+      name: "Options"
+    }
+  ]).then((prompt) => {
+    switch (prompt.Options) {
+      case "Engineer":
+        engineerStart();
+        break;
+      case "Intern":
+        internStart();
+        break;
+      default:
+        // render();
+        fs.writeFile(output, render(emp), function (err) {
+          if (err) {
+            throw err;
+          }
+        });
+        console.log("The rendered HTML file is located in the output folder.");
+        break;
+    }
+  });
+};
+
+
+templateStart();
