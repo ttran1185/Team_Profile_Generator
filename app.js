@@ -28,13 +28,13 @@ const templateStart = () => {
       //takes in name 
       {
         type: "input",
-        message: "What is your manager's name?",
+        message: "What is the manager's name?",
         name: "name"
       },
 
       {
         type: "number",
-        message: "What is your manager's ID number?",
+        message: "What is the manager's ID number?",
         name: "id",
 
         validate: validateId
@@ -42,13 +42,13 @@ const templateStart = () => {
 
       {
         type: "input",
-        message: "What is your manager's email address?",
+        message: "What is the manager's email address?",
         name: "email"
       },
 
       {
         type: "number",
-        message: "What is your manager's office phone number?",
+        message: "What is the manager's office phone number?",
         name: "officeNumber"
       },
       {
@@ -61,7 +61,7 @@ const templateStart = () => {
   
       const newManager = new Manager(prompt.name, prompt.id, prompt.email, prompt.officeNumber);
   
-      emps.push(newManager);
+      emp.push(newManager);
       empId.push(prompt.id);
   
       switch (prompt.action) {
@@ -73,12 +73,12 @@ const templateStart = () => {
           break;
         default:
           // render();
-          fs.writeFile(output, render(emps), function (err) {
+          fs.writeFile(output, render(emp), function (err) {
             if (err) {
               throw err;
             }
           });
-          console.log("Your html has been rendered! Head over to the Output folder!");
+          console.log("the html has been rendered! Head over to the Output folder!");
           break;
       }
     });
@@ -103,12 +103,12 @@ const templateStart = () => {
           break;
         default:
           // render();
-          fs.writeFile(outputPath, render(employees), function (err) {
+          fs.writeFile(outputPath, render(emp), function (err) {
             if (err) {
               throw err;
             }
           });
-          console.log("Your html has been rendered! Head over to the Output folder!");
+          console.log("the html has been rendered! Head over to the Output folder!");
           break;
       }
     });
@@ -120,23 +120,23 @@ const engineerStart = () => {
     inquirer.prompt([
       {
         type: "input",
-        message: "What is your engineer's name?",
+        message: "What is the engineer's name?",
         name: "name"
       },
       {
         type: "number",
-        message: "What is your engineer's ID number?",
+        message: "What is the engineer's ID number?",
         name: "id",
         validate: validateId
       },
       {
         type: "input",
-        message: "What is your engineer's email address?",
+        message: "What is the engineer's email address?",
         name: "email"
       },
       {
         type: "input",
-        message: "What is your engineer's GitHub user name?",
+        message: "What is the engineer's GitHub user name?",
         name: "github"
       }
     ]).then((prompt) => {
@@ -144,8 +144,8 @@ const engineerStart = () => {
       const newEngineer = new Engineer(prompt.name, prompt.id, prompt.email, prompt.github);
   
   
-      employees.push(newEngineer);
-      employeeId.push(prompt.id);
+      emp.push(newEngineer);
+      empID.push(prompt.id);
   
     
       secondPrompt();
@@ -158,42 +158,34 @@ const engineerStart = () => {
     inquirer.prompt([
       {
         type: "input",
-        message: "What is your intern's name?",
+        message: "What is the intern's name?",
         name: "name"
       },
       {
         type: "number",
-        message: "What is your interns's ID number?",
+        message: "What is the interns's ID number?",
         name: "id",
         validate: validateId
       },
       {
         type: "input",
-        message: "What is your interns's email address?",
+        message: "What is the interns's email address?",
         name: "email"
       },
       {
         type: "input",
-        message: "Where is your intern attending school?",
+        message: "Where is the intern attending school?",
         name: "school"
       }
     ]).then((prompt) => {
       const newIntern = new Intern(prompt.name, prompt.id, prompt.email, prompt.school);
   
-      employees.push(newIntern);
-      employeeId.push(prompt.id);
+      emp.push(newIntern);
+      empID.push(prompt.id);
   
       secondPrompt();
     });
   };
   
-  
- 
-  
-
-  
-
-  
-
   
   templateStart();
